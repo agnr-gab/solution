@@ -1,0 +1,7 @@
+br\com\viaHub\carrinhoDeCompras\configuration\JpaConfig.class
+br\com\viaHub\carrinhoDeCompras\repository\ProdutoRepository.class
+br\com\viaHub\carrinhoDeCompras\service\ProdutoService.class
+br\com\viaHub\carrinhoDeCompras\application\CarrinhoDeComprasApplication.class
+br\com\viaHub\carrinhoDeCompras\controller\ProdutoController.class
+br\com\viaHub\carrinhoDeCompras\dtos\ProdutoDTO.class
+br\com\viaHub\carrinhoDeCompras\entity\Produto.class
