@@ -1,43 +1,55 @@
 package br.com.viaHub.carrinhoDeCompras.application.controller;
 
 import br.com.viaHub.carrinhoDeCompras.application.entity.Produto;
-import br.com.viaHub.carrinhoDeCompras.application.repository.ProdutoRepository;
+import br.com.viaHub.carrinhoDeCompras.application.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping ("/") //ALTERAR URL DEIXAR APENAS API
+@RequestMapping("/")
 public class ProdutoController {
 
     @Autowired
-    private ProdutoRepository produtoRepository;
+    private ProdutoService produtoService;
 
     @GetMapping("/produtos")
-    //@RequestMapping ("produtos") TODOS OS OUTRSO VERBOS
     public List<Produto> listarTodosProdutos() {
         Produto produto = new Produto();
         produto.setNome("Máquina");
         produto.setVendido(true);
-        produtoRepository.save(produto);
+        produtoService.criarProduto(produto);
 
-        return produtoRepository.findAll();
+        return produtoService.listarTodosProdutos();
     }
 
-//    @PostMapping("/produtos")
-//    public Produto addProduto(@RequestBody Produto produto) {
-//        return produtoRepository.save(produto);
-//    }
+    @GetMapping("/{id}")
+    public Produto buscarPorId(@PathVariable Long id) {
+        return produtoService.buscarProdutoPorId(id);
+    }
 
-//    @PutMapping("/{id}")
-//    public Produto atualizarStatusProduto(@PathVariable Long id, @RequestBody Produto produtoAtualizado) {
-//        Produto produto = produtoRepository.findById(id).orElseThrow(() ->
-//                new RuntimeException("Id informado não localizado para o produto " + id));
-//
-//        produto.setVendido(produtoAtualizado.isVendido());
-//        return produtoRepository.save(produto);
-//
-//    }
+    @GetMapping("/vendidos")
+    public List<Produto> obterProdutosVendidos() {
+        return produtoService.obterProdutosPorStatus(true);
+    }
+
+    @GetMapping("/naovendidos")
+    public List<Produto> obterProdutosNaoVendidos() {
+        return produtoService.obterProdutosPorStatus(false);
+    }
+
+    @PostMapping("/produtos")
+    public Produto addProduto(@RequestBody Produto produto) {
+        return produtoService.criarProduto(produto);
+    }
+
+    @PutMapping("/{id}")
+    public void atualizarStatusProduto(@PathVariable Long id, @RequestBody Produto produto) {
+        Produto produtoExistente = produtoService.buscarProdutoPorId(id);
+        if (produtoExistente != null) {
+            produtoExistente.setVendido(produto.isVendido());
+            produtoService.atualizarProduto(produtoExistente);
+        }
+    }
 }

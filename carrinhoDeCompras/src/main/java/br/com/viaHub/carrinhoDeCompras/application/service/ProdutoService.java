@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProdutoService {
@@ -19,16 +18,25 @@ public class ProdutoService {
 
     }
 
-    public List<Produto> getAllPrdutcs() {
+    public List<Produto> listarTodosProdutos() {
         return produtoRepository.findAll();
     }
 
-    public Produto createProduct(Produto produto) {
+    public Produto criarProduto(Produto produto) {
         return produtoRepository.save(produto);
     }
 
-    public Optional<Produto> buscarPorId(Long id) {
-        return produtoRepository.findById(id);
+    public Produto buscarProdutoPorId(Long id) {
+        return produtoRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("Id informado não localizado para o produto " + id));
+    }
+
+    public List<Produto> obterProdutosPorStatus(boolean vendido) {
+        return produtoRepository.findByVendido(vendido);
+    }
+
+    public void atualizarProduto(Produto produto) {
+        produtoRepository.save(produto);
     }
 
 }
